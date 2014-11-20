@@ -28,6 +28,7 @@ public class StageBuilder {
 		Sprite dirt = new Sprite(16, 16, 1, 0, sheet);
 		Sprite redGuy = new Sprite(16, 16, 0, 0, red);
 		s.addObject(new Player(300, 225, redGuy, s, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_UP, listener));
+		s.addObject(new Player(250, 225, redGuy, s, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_W, listener));
 		s.addObject(new BackgroundObject(0, 0, back, s));
 		for(int i=1; i<35; i++){
 			s.addObject(new Block(16*i, 300, dirt, s));
