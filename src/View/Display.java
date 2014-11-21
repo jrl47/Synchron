@@ -8,6 +8,7 @@ import java.awt.image.DataBufferInt;
 import java.util.List;
 
 import Model.BackgroundObject;
+import Model.Camera;
 import Model.GameObject;
 
 /**
@@ -19,19 +20,20 @@ public class Display {
 	
 	private int width;
 	private int height;
-	private int[] pixels;
+//	private int[] pixels;
 	private Canvas canvas;
 	private BufferedImage image;
-	
+	private PixelArray pixels;
 	public Display(int w, int h, Canvas c){
 		width = w;
 		height = h;
 		canvas = c;
 		image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-		pixels = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
+		int [] pixel = ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
+		pixels = new PixelArray(pixel, width);
 	}
 	
-	public void render(List<GameObject> list){
+	public void render(List<GameObject> list, Camera c){
     	BufferStrategy bs = canvas.getBufferStrategy();
     	if(bs==null){
     		canvas.createBufferStrategy(3);
@@ -56,7 +58,10 @@ public class Display {
 			Sprite s = o.getSprite();
 			for(int i = 0; i < s.XSIZE; i++){
 				for(int j=0; j < s.YSIZE; j++){
-					pixels[(i + (int)o.getX()) + (j + (int)o.getY())*width] = s.getPixels()[i + j*s.XSIZE];
+					int locx = i + (int)o.getX() - c.getX() + width/2;
+					int locy = j + (int)o.getY()- c.getY() + height/2;
+					if(locx >=0 && locx < width && locy >=0 && locy < height)
+						pixels.setPixel(locx, locy, s.getPixels().getPixel(i,j));
 				}
 			}
 		}
@@ -68,9 +73,7 @@ public class Display {
 	}
 	
 	public void clear(){
-		for(int i=0; i<pixels.length; i++){
-			pixels[i]=0;
-		}
+		pixels.clear();
 	}
 	
 }

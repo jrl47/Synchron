@@ -11,13 +11,13 @@ public class Sprite {
 	public final int YSIZE;
 	private int x;
 	private int y;
-	private int[] pixels;
+	private PixelArray pixels;
 	private SpriteSheet sheet;
 	
 	public Sprite(int xsize, int ysize, int xx, int yy, SpriteSheet s){
 		XSIZE = xsize;
 		YSIZE = ysize;
-		pixels = new int[xsize * ysize];
+		pixels = new PixelArray(new int[xsize * ysize], xsize);
 		x = xx*xsize;
 		y = yy*ysize;
 		sheet = s;
@@ -27,12 +27,12 @@ public class Sprite {
 	private void loadPixels() {
 		for(int i=0; i < XSIZE; i++){
 			for(int j=0; j< YSIZE; j++){
-				pixels[i+j*XSIZE] = sheet.getPixels()[i+x+j*sheet.XSIZE+y*sheet.XSIZE];
+				pixels.setPixel(i,j,sheet.getPixels().getPixel(i+x,j+y));
 			}
 		}
 	}
 	
-	public int[] getPixels(){
+	public PixelArray getPixels(){
 		return pixels;
 	}
 

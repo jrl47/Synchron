@@ -85,7 +85,7 @@ public class Game implements Runnable, InputUser{
 		s.step();
 	}
 	public void render() {
-		display.render(s.getObjects());
+		display.render(s.getObjects(), s.getCamera());
 	}
 	public void useInput() {
 		

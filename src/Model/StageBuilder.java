@@ -20,15 +20,19 @@ public class StageBuilder {
 	}
 
 	public Stage buildInitialStage(){
-		Stage s = new Stage(Game.width, Game.height, 10, 10);
 		SpriteSheet bg = new SpriteSheet("/amazingbackground.png", 800, 450);
 		SpriteSheet sheet = new SpriteSheet("/lightdeciduousspritesheet.png", 80, 160);
 		SpriteSheet red = new SpriteSheet("/redguy.png", 16, 16);
 		Sprite back = new Sprite(800, 450, 0, 0, bg);
 		Sprite dirt = new Sprite(16, 16, 1, 0, sheet);
 		Sprite redGuy = new Sprite(16, 16, 0, 0, red);
-		s.addObject(new Player(300, 225, redGuy, s, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_UP, listener));
-		s.addObject(new Player(250, 225, redGuy, s, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_W, listener));
+		Camera c = new Camera();
+		Stage s = new Stage(Game.width, Game.height, 10, 10, c);
+		Player p1 = new Player(300, 225, redGuy, s, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_UP, listener);
+		c.addObject(p1);
+		Player p2 = new Player(250, 225, redGuy, s, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_W, listener);
+		s.addObject(p1);
+		s.addObject(p2);
 		s.addObject(new BackgroundObject(0, 0, back, s));
 		for(int i=1; i<35; i++){
 			s.addObject(new Block(16*i, 300, dirt, s));
