@@ -21,7 +21,7 @@ public class Game implements Runnable, InputUser{
 	
 	public static int width = 800;
 	public static int height = (width / 16) * 9;
-	public static int scale = 2;
+	public static double scale = 2;
 	
 	private Thread thread;
 	private Canvas canvas;
@@ -32,7 +32,7 @@ public class Game implements Runnable, InputUser{
 	private StageBuilder sb;
 	private Stage s;
 	public Game(){
-		Dimension size = new Dimension(width*scale, height*scale);
+		Dimension size = new Dimension((int)(width*scale), (int)(height*scale));
 		listener = new MovementListener();
 		canvas = new Canvas();
 		canvas.setPreferredSize(size);
@@ -85,7 +85,7 @@ public class Game implements Runnable, InputUser{
 		s.step();
 	}
 	public void render() {
-		display.render(s.getObjects(), s.getCamera());
+		display.render(s.getObjects(), s.getCameras());
 	}
 	public void useInput() {
 		

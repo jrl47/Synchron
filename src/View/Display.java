@@ -20,7 +20,8 @@ public class Display {
 	
 	private int width;
 	private int height;
-//	private int[] pixels;
+	private static final double WIDTH_SCALAR = .05;
+	private static final double HEIGHT_SCALAR = .05;
 	private Canvas canvas;
 	private BufferedImage image;
 	private PixelArray pixels;
@@ -33,7 +34,9 @@ public class Display {
 		pixels = new PixelArray(pixel, width);
 	}
 	
-	public void render(List<GameObject> list, Camera c){
+	public void render(List<GameObject> list, List<Camera> cameras){
+		Camera c1 = cameras.get(0);
+		Camera c2 = cameras.get(1);
     	BufferStrategy bs = canvas.getBufferStrategy();
     	if(bs==null){
     		canvas.createBufferStrategy(3);
@@ -53,14 +56,30 @@ public class Display {
     			}
     		}
     	}
+    	
 		for(int k=0; k < list.size(); k++){
 			GameObject o = list.get(k);
 			Sprite s = o.getSprite();
 			for(int i = 0; i < s.XSIZE; i++){
 				for(int j=0; j < s.YSIZE; j++){
-					int locx = i + (int)o.getX() - c.getX() + width/2;
-					int locy = j + (int)o.getY()- c.getY() + height/2;
-					if(locx >=0 && locx < width && locy >=0 && locy < height)
+					int locx = i + (int)o.getX() - c1.getX() + (int)WIDTH_SCALAR + (int)(((width/2)-2*WIDTH_SCALAR)/2);
+					int locy = j + (int)o.getY()- c1.getY() + (int)(height-2*HEIGHT_SCALAR)/2;
+					if(locx >=(width*WIDTH_SCALAR) && locx < (int)(width/2 - width*WIDTH_SCALAR) &&
+							locy >=height*HEIGHT_SCALAR && locy < (int)(height - height*HEIGHT_SCALAR))
+						pixels.setPixel(locx, locy, s.getPixels().getPixel(i,j));
+				}
+			}
+		}
+		
+		for(int k=0; k < list.size(); k++){
+			GameObject o = list.get(k);
+			Sprite s = o.getSprite();
+			for(int i = 0; i < s.XSIZE; i++){
+				for(int j=0; j < s.YSIZE; j++){
+					int locx = i + (int)o.getX() - c2.getX() + (int)WIDTH_SCALAR + width/2 + (int)(((width/2)-2*WIDTH_SCALAR)/2);
+					int locy = j + (int)o.getY()- c2.getY() + (int)(height-2*HEIGHT_SCALAR)/2;
+					if(locx >=(width*WIDTH_SCALAR)+(width/2) && locx < (int)(width - width*WIDTH_SCALAR) &&
+							locy >=height*HEIGHT_SCALAR && locy < (int)(height - height*HEIGHT_SCALAR))
 						pixels.setPixel(locx, locy, s.getPixels().getPixel(i,j));
 				}
 			}

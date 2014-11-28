@@ -16,13 +16,13 @@ public class Stage {
 	private int width;
 	private int height;
 	TileGrid myGrid;
-	private Camera myCamera;
+	private List<Camera> myCameras;
 	private List<GameObject> myObjects;
-	public Stage(int w, int h, int tw, int th, Camera c){
+	public Stage(int w, int h, int tw, int th, List<Camera> c){
 		width = w;
 		height = h;
 		myGrid = new TileGrid(tw, th);
-		myCamera = c;
+		myCameras = c;
 		myObjects = new ArrayList<GameObject>();
 	}
 	public void addObject(GameObject o){
@@ -52,7 +52,7 @@ public class Stage {
 	public int getHeight(){
 		return height;
 	}
-	public Camera getCamera() {
-		return myCamera;
+	public List<Camera> getCameras() {
+		return myCameras;
 	}
 }

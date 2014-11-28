@@ -33,8 +33,18 @@ public class Player extends PhysicalObject implements InputUser, GravityForcable
 			xvel = -4;
 		if(listener.getKey().contains(rightCode))
 			xvel = 4;
-		if(listener.getKey().contains(jumpCode)  && yvel==1)
+		if(listener.getKey().contains(jumpCode)  && isOnSurface())
 			yvel -= 12;
+	}
+
+	private boolean isOnSurface() {
+		double oldyvel = yvel;
+		yvel = 1;
+		boolean result = false;
+		if(checkAdjacencyY())
+			result = true;
+		yvel = oldyvel;
+		return result;
 	}
 
 	public void applyDrag() {
@@ -42,6 +52,6 @@ public class Player extends PhysicalObject implements InputUser, GravityForcable
 	}
 
 	public void applyGravity() {
-		yvel += 1;
+		yvel += .99;
 	}
 }
