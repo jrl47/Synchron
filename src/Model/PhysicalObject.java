@@ -43,11 +43,16 @@ public class PhysicalObject extends GameObject{
 	}
 	@Override
 	public void move(){
+		if(this instanceof Player){
 		myTile.removeObject(this);
 		applyAdjustments();
 		hitbox.move(x, y);
 		myTile = myStage.myGrid.getTile(xToGridX(x),yToGridY(y));
 		myTile.addObject(this);
+		}
+		else{
+			super.move();
+		}
 	}
 	/**
 	 * moves the object to where it needs to be considering nearby obstacles
