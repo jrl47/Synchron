@@ -1,5 +1,6 @@
 package View;
 
+import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -27,9 +28,15 @@ public class SpriteSheet {
 	
 	private void load(){
 		try {
-			BufferedImage image = ImageIO.read(SpriteSheet.class.getResource(path));
-			int w = image.getWidth();
-			int h = image.getHeight();
+			BufferedImage origImage = ImageIO.read(SpriteSheet.class.getResource(path));
+			BufferedImage image = new BufferedImage(XSIZE, YSIZE, BufferedImage.TYPE_INT_RGB);
+			Graphics g = image.createGraphics();
+			g.drawImage(origImage, 0, 0, XSIZE, YSIZE, null);
+			g.dispose();
+			int w = XSIZE;
+			int h = YSIZE;
+//			int w = image.getWidth();
+//			int h = image.getHeight();
 			image.getRGB(0, 0, w, h, pixels.getPixels(), 0, w);
 		} catch (IOException e) {
 			e.printStackTrace();

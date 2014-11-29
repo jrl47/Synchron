@@ -29,4 +29,10 @@ public class PixelArray {
 	public int[] getPixels(){
 		return pixels;
 	}
+	public int getHeight(){
+		return (int)pixels.length / width;
+	}
+	public int getWidth(){
+		return width;
+	}
 }

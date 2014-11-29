@@ -34,7 +34,7 @@ public class Player extends PhysicalObject implements InputUser, GravityForcable
 		if(listener.getKey().contains(rightCode))
 			xvel = 4;
 		if(listener.getKey().contains(jumpCode)  && isOnSurface())
-			yvel -= 12;
+			yvel -= 16;
 	}
 
 	private boolean isOnSurface() {
