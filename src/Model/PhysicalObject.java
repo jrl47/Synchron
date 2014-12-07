@@ -15,7 +15,7 @@ import View.Sprite;
  */
 public class PhysicalObject extends GameObject{
 
-	private Hitbox hitbox;
+	protected Hitbox hitbox;
 	private Tile myTile;
 	public PhysicalObject(double xx, double yy, Sprite s, Stage st) {
 		super(xx, yy, s, st);
@@ -107,14 +107,14 @@ public class PhysicalObject extends GameObject{
 	 * 
 	 * @return whether the object is directly (1 pixel away) next to an object in the direction of its xy-velocity
 	 */
-	public boolean checkAdjacencyBoth(){
+	protected boolean checkAdjacencyBoth(){
 		boolean result = false;
 		if(xvel>=0 && yvel >=0){
 			x++;
 			y++;
 			hitbox.move(x,y);
 			for(PhysicalObject p: getCloseObjects()){
-				if(hitbox.collides(p.hitbox))
+				if(p.collides(this))
 					result = true;
 			}
 			x--;
@@ -125,7 +125,7 @@ public class PhysicalObject extends GameObject{
 			y--;
 			hitbox.move(x,y);
 			for(PhysicalObject p: getCloseObjects()){
-				if(hitbox.collides(p.hitbox))
+				if(p.collides(this))
 					result = true;
 			}
 			x--;
@@ -136,7 +136,7 @@ public class PhysicalObject extends GameObject{
 			y++;
 			hitbox.move(x,y);
 			for(PhysicalObject p: getCloseObjects()){
-				if(hitbox.collides(p.hitbox))
+				if(p.collides(this))
 					result = true;
 			}
 			x++;
@@ -147,7 +147,7 @@ public class PhysicalObject extends GameObject{
 			y--;
 			hitbox.move(x,y);
 			for(PhysicalObject p: getCloseObjects()){
-				if(hitbox.collides(p.hitbox))
+				if(p.collides(this))
 					result = true;
 			}
 			x++;
@@ -159,13 +159,13 @@ public class PhysicalObject extends GameObject{
 	 * 
 	 * @return whether the object is directly (1 pixel away) next to an object in the direction of its x-velocity
 	 */
-	public boolean checkAdjacencyX(){
+	protected boolean checkAdjacencyX(){
 		boolean result = false;
 		if(xvel>=0){
 			x++;
 			hitbox.move(x,y);
 			for(PhysicalObject p: getCloseObjects()){
-				if(hitbox.collides(p.hitbox))
+				if(p.collides(this))
 					result = true;
 			}
 			x--;
@@ -174,7 +174,7 @@ public class PhysicalObject extends GameObject{
 			x--;
 			hitbox.move(x,y);
 			for(PhysicalObject p: getCloseObjects()){
-				if(hitbox.collides(p.hitbox))
+				if(p.collides(this))
 					result = true;
 			}
 			x++;
@@ -185,13 +185,13 @@ public class PhysicalObject extends GameObject{
 	 * 
 	 * @return whether the object is directly (1 pixel away) next to an object in the direction of its y-velocity
 	 */
-	public boolean checkAdjacencyY(){
+	protected boolean checkAdjacencyY(){
 		boolean result = false;
 		if(yvel>=0){
 			y++;
 			hitbox.move(x,y);
 			for(PhysicalObject p: getCloseObjects()){
-				if(hitbox.collides(p.hitbox))
+				if(p.collides(this))
 					result = true;
 			}
 			y--;
@@ -200,7 +200,7 @@ public class PhysicalObject extends GameObject{
 			y--;
 			hitbox.move(x,y);
 			for(PhysicalObject p: getCloseObjects()){
-				if(hitbox.collides(p.hitbox))
+				if(p.collides(this))
 					result = true;
 			}
 			y++;
@@ -225,5 +225,8 @@ public class PhysicalObject extends GameObject{
 		}
 		closeObjects.remove(this);
 		return closeObjects;
+	}
+	protected boolean collides(PhysicalObject p){
+		return hitbox.collides(p.hitbox);
 	}
 }

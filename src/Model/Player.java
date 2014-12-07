@@ -30,9 +30,9 @@ public class Player extends PhysicalObject implements InputUser, GravityForcable
 	
 	public void useInput() {
 		if(listener.getKey().contains(leftCode))
-			xvel = -4;
+			xvel = -5;
 		if(listener.getKey().contains(rightCode))
-			xvel = 4;
+			xvel = 5;
 		if(listener.getKey().contains(jumpCode)  && isOnSurface())
 			yvel -= 16;
 	}
@@ -52,6 +52,6 @@ public class Player extends PhysicalObject implements InputUser, GravityForcable
 	}
 
 	public void applyGravity() {
-		yvel += .99;
+		yvel += .95;
 	}
 }
