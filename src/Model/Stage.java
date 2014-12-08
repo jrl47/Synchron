@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import Controller.DragForcable;
 import Controller.GravityForcable;
 import Controller.InputUser;
 import Controller.MovementListener;
@@ -74,13 +73,6 @@ public class Stage {
 			}
 		}
 	}
-	public Stage(int w, int h, int tw, int th, List<Camera> c){
-		width = w;
-		height = h;
-		myGrid = new TileGrid(tw, th);
-		myCameras = c;
-		myObjects = new ArrayList<GameObject>();
-	}
 	public void addObject(GameObject o){
 		myObjects.add(o);
 	}
@@ -92,16 +84,19 @@ public class Stage {
 			if(o instanceof GravityForcable){
 				((GravityForcable) o).applyGravity();
 			}
-			if(o instanceof DragForcable){
-				((DragForcable) o).applyDrag();
-			}
 			if(o instanceof InputUser){
 				((InputUser) o).useInput();
 			}
 			o.fixSpeed();
-			o.move();
+			moveObject(o);
 		}
 	}
+	
+	public void moveObject(GameObject o){
+		o.move();
+	}
+	
+	
 	public int getWidth(){
 		return width;
 	}

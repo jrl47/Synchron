@@ -2,7 +2,6 @@ package Model;
 
 import java.awt.Rectangle;
 
-import Controller.DragForcable;
 import Controller.GravityForcable;
 import Controller.InputUser;
 import Controller.MovementListener;
@@ -14,7 +13,7 @@ import View.Sprite;
  * @author Jacob
  * A PhysicalObject which is controlled by the user to move about and interact.
  */
-public class Player extends PhysicalObject implements InputUser, GravityForcable, DragForcable{
+public class Player extends PhysicalObject implements InputUser, GravityForcable{
 
 	private int leftCode;
 	private int rightCode;
@@ -33,6 +32,9 @@ public class Player extends PhysicalObject implements InputUser, GravityForcable
 			xvel = -5;
 		if(listener.getKey().contains(rightCode))
 			xvel = 5;
+		if(!(listener.getKey().contains(leftCode))&&!(listener.getKey().contains(rightCode))){
+			xvel = 0;
+		}
 		if(listener.getKey().contains(jumpCode)  && isOnSurface())
 			yvel -= 16;
 	}
@@ -45,10 +47,6 @@ public class Player extends PhysicalObject implements InputUser, GravityForcable
 			result = true;
 		yvel = oldyvel;
 		return result;
-	}
-
-	public void applyDrag() {
-		xvel = 0;
 	}
 
 	public void applyGravity() {
