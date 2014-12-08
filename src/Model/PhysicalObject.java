@@ -18,7 +18,7 @@ public class PhysicalObject extends GameObject{
 	protected Hitbox hitbox;
 	private Tile myTile;
 	public PhysicalObject(double xx, double yy, Sprite s, Stage st) {
-		super(xx, yy, s, st);
+		super(xx, yy, s, st, 1);
 		List<Rectangle2D.Double> rects = new ArrayList<Rectangle2D.Double>();
 		rects.add(new Rectangle2D.Double((int)xx, (int)yy, s.XSIZE, s.YSIZE));
 		myTile = myStage.myGrid.getTile(xToGridX(xx),yToGridY(yy));

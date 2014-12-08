@@ -7,7 +7,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.util.List;
 
-import Model.BackgroundObject;
 import Model.Camera;
 import Model.GameObject;
 
@@ -44,19 +43,20 @@ public class Display {
     	}
     	
     	clear();
+    	
+    	// Sorts objects based on which are in front of one another
     	for(int i=0; i < list.size(); i++){
-    		if(!(list.get(i) instanceof BackgroundObject)){
-    			if(i+1 < list.size()){
-    				if(list.get(i+1) instanceof BackgroundObject){
-    					GameObject o1 = list.get(i);
-    					GameObject o2 = list.get(i+1);
-    					list.set(i, o2);
-    					list.set(i+1, o1);
-    				}
+    		if(i+1 < list.size()){
+    			if(list.get(i+1).getZ() < list.get(i).getZ()){
+    				GameObject o1 = list.get(i);
+    				GameObject o2 = list.get(i+1);
+    				list.set(i, o2);
+    				list.set(i+1, o1);
     			}
     		}
     	}
     	
+    	// Draws objects in left screen
 		for(int k=0; k < list.size(); k++){
 			GameObject o = list.get(k);
 			Sprite s = o.getSprite();
@@ -71,6 +71,7 @@ public class Display {
 			}
 		}
 		
+		// Draws objects in right screen
 		for(int k=0; k < list.size(); k++){
 			GameObject o = list.get(k);
 			Sprite s = o.getSprite();

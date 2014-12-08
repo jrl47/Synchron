@@ -64,7 +64,7 @@ public class Stage {
 		myCameras = cameras;
 		addObject(p1);
 		addObject(p2);
-		addObject(new BackgroundObject(0, 0, back, this));
+		addObject(new GameObject(0, 0, back, this, 0));
 		for(int i=0; i<map.getWidth(); i++){
 			for(int j=0; j<map.getHeight(); j++){
 				if(map.getPixel(i, j)==-16777216){
@@ -82,7 +82,7 @@ public class Stage {
 	public void step(){
 		for(GameObject o: myObjects){
 			if(o instanceof GravityForcable){
-				((GravityForcable) o).applyGravity();
+				applyGravity(o);
 			}
 			if(o instanceof InputUser){
 				((InputUser) o).useInput();
@@ -94,6 +94,9 @@ public class Stage {
 	
 	public void moveObject(GameObject o){
 		o.move();
+	}
+	public void applyGravity(GameObject o){
+		((GravityForcable) o).applyGravity();
 	}
 	
 	
