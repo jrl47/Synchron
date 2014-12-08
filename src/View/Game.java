@@ -8,7 +8,7 @@ import javax.swing.JFrame;
 import Controller.InputUser;
 import Controller.MovementListener;
 import Model.Stage;
-import Model.StageBuilder;
+import Model.StageManager;
 
 /**
  * 
@@ -27,13 +27,11 @@ public class Game implements Runnable, InputUser{
 	private Canvas canvas;
 	private boolean exitGame;
 	private JFrame frame;
-	private MovementListener listener;
 	private Display display;
-	private StageBuilder sb;
-	private Stage s;
+	private StageManager manager;
 	public Game(){
 		Dimension size = new Dimension((int)(width*scale), (int)(height*scale));
-		listener = new MovementListener();
+		MovementListener listener = new MovementListener();
 		canvas = new Canvas();
 		canvas.setPreferredSize(size);
 		canvas.addKeyListener(listener);
@@ -45,15 +43,14 @@ public class Game implements Runnable, InputUser{
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     	frame.setVisible(true);
     	display = new Display(width, height, canvas);
-    	sb = new StageBuilder(listener);
-    	s = sb.buildInitialStage();
+    	manager = new StageManager();
+    	manager.buildInitialStage(listener);
 		init();
 	}
 	public synchronized void init(){
 		thread = new Thread(this, "Synchron");
 		exitGame = false;
 		frame.setFocusable(true);
-		frame.addKeyListener(new MovementListener());
 		thread.start();
 	}
 	public void run() {
@@ -82,10 +79,10 @@ public class Game implements Runnable, InputUser{
 		}
 	}
 	public void step() {
-		s.step();
+		manager.getStage().step();
 	}
 	public void render() {
-		display.render(s.getObjects(), s.getCameras());
+		display.render(manager.getStage().getObjects(), manager.getStage().getCameras());
 	}
 	public void useInput() {
 		
