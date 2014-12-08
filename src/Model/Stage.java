@@ -8,9 +8,12 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
-import Controller.GravityForcable;
 import Controller.InputUser;
 import Controller.MovementListener;
+import Forces.Force;
+import Forces.ForceData;
+import Forces.Gravity;
+import Forces.GravityData;
 import View.PixelArray;
 import View.Sprite;
 import View.SpriteSheet;
@@ -28,6 +31,7 @@ public class Stage {
 	TileGrid myGrid;
 	private List<Camera> myCameras;
 	private List<GameObject> myObjects;
+	private List<Force> myForces;
 	private MovementListener listener;
 	public Stage(MovementListener lis){
 		listener = lis;
@@ -47,6 +51,12 @@ public class Stage {
 		myGrid = new TileGrid(XTILES, YTILES);
 		myObjects = new ArrayList<GameObject>();
 		
+		myForces = new ArrayList<Force>();
+		myForces.add(new Gravity());
+		
+		List<ForceData> playerForces = new ArrayList<ForceData>();
+		playerForces.add(new GravityData(1));
+		
 		SpriteSheet bg = new SpriteSheet("/amazingbackground.png", map.getWidth()*16, map.getHeight()*16);
 		SpriteSheet sheet = new SpriteSheet("/lightdeciduousspritesheet.png", 80, 160);
 		SpriteSheet red = new SpriteSheet("/redguy.png", 16, 16);
@@ -57,18 +67,18 @@ public class Stage {
 		Camera c2 = new Camera();
 		List<Camera> cameras = new ArrayList<Camera>();
 		cameras.add(c1); cameras.add(c2);
-		Player p1 = new Player(98*16, 170*16, redGuy, this, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_W, listener);
+		Player p1 = new Player(98*16, 170*16, redGuy, this, KeyEvent.VK_A, KeyEvent.VK_D, KeyEvent.VK_W, listener, playerForces);
 		c1.addObject(p1);
-		Player p2 = new Player(99*16, 170*16, redGuy, this, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_UP, listener);
+		Player p2 = new Player(99*16, 170*16, redGuy, this, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_UP, listener, playerForces);
 		c2.addObject(p2);
 		myCameras = cameras;
 		addObject(p1);
 		addObject(p2);
-		addObject(new GameObject(0, 0, back, this, 0));
+		addObject(new GameObject(0, 0, back, this, 0, null));
 		for(int i=0; i<map.getWidth(); i++){
 			for(int j=0; j<map.getHeight(); j++){
 				if(map.getPixel(i, j)==-16777216){
-					addObject(new Block(16*i, 16*j, dirt, this));
+					addObject(new PhysicalObject(16*i, 16*j, dirt, this, null));
 				}
 			}
 		}
@@ -81,9 +91,7 @@ public class Stage {
 	}
 	public void step(){
 		for(GameObject o: myObjects){
-			if(o instanceof GravityForcable){
-				applyGravity(o);
-			}
+			applyForces(o);
 			if(o instanceof InputUser){
 				((InputUser) o).useInput();
 			}
@@ -95,8 +103,13 @@ public class Stage {
 	public void moveObject(GameObject o){
 		o.move();
 	}
-	public void applyGravity(GameObject o){
-		((GravityForcable) o).applyGravity();
+	public void applyForces(GameObject o){
+		for(Force f: myForces){
+			f.applyForce(o);
+		}
+//		if(o instanceof GravityForcable){
+//			applyGravity(o);
+//		}
 	}
 	
 	

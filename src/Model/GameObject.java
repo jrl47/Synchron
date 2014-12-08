@@ -1,5 +1,8 @@
 package Model;
 
+import java.util.List;
+
+import Forces.ForceData;
 import View.Game;
 import View.Sprite;
 
@@ -16,13 +19,15 @@ public class GameObject {
 	protected double yvel;
 	private Sprite mySprite;
 	private boolean exists;
+	private List<ForceData> myForces;
 	protected Stage myStage;
-	public GameObject(double xx, double yy, Sprite s, Stage st, double zz){
+	public GameObject(double xx, double yy, Sprite s, Stage st, double zz, List<ForceData> forces){
 		x = xx;
 		y = yy;
 		z = zz;
 		mySprite = s;
 		myStage = st;
+		myForces = forces;
 	}
 	public double getX(){
 		return x;
@@ -43,6 +48,12 @@ public class GameObject {
 		x+=xvel;
 		y+=yvel;
 	}
+	public void incrementXVel(double xinc){
+		xvel+= xinc;
+	}
+	public void incrementYVel(double yinc){
+		yvel+= yinc;
+	}
 	public double getZ(){
 		return z;
 	}
@@ -58,5 +69,8 @@ public class GameObject {
 			yvel = Game.MAX_SPEED;
 		if(yvel < -1*Game.MAX_SPEED)
 			yvel = -1*Game.MAX_SPEED;
+	}
+	public List<ForceData> getForces() {
+		return myForces;
 	}
 }

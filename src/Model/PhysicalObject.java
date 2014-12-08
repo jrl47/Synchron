@@ -4,6 +4,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import Forces.ForceData;
 import View.Game;
 import View.Sprite;
 
@@ -17,8 +18,8 @@ public class PhysicalObject extends GameObject{
 
 	protected Hitbox hitbox;
 	private Tile myTile;
-	public PhysicalObject(double xx, double yy, Sprite s, Stage st) {
-		super(xx, yy, s, st, 1);
+	public PhysicalObject(double xx, double yy, Sprite s, Stage st, List<ForceData> forces) {
+		super(xx, yy, s, st, 1, forces);
 		List<Rectangle2D.Double> rects = new ArrayList<Rectangle2D.Double>();
 		rects.add(new Rectangle2D.Double((int)xx, (int)yy, s.XSIZE, s.YSIZE));
 		myTile = myStage.myGrid.getTile(xToGridX(xx),yToGridY(yy));
