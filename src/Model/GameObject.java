@@ -19,7 +19,7 @@ public class GameObject {
 	protected double yvel;
 	private Sprite mySprite;
 	private boolean exists;
-	private List<ForceData> myForces;
+	protected List<ForceData> myForces;
 	protected Stage myStage;
 	public GameObject(double xx, double yy, Sprite s, Stage st, double zz, List<ForceData> forces){
 		x = xx;
@@ -53,6 +53,12 @@ public class GameObject {
 	}
 	public void incrementYVel(double yinc){
 		yvel+= yinc;
+	}
+	public void setXVel(double xset){
+		xvel = xset;
+	}
+	public void setYVel(double yset){
+		yvel = yset;
 	}
 	public double getZ(){
 		return z;

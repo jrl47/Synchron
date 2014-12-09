@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Forces.ForceData;
+import Forces.PlayerInputData;
 import View.Game;
 import View.Sprite;
 
@@ -42,9 +43,26 @@ public class PhysicalObject extends GameObject{
 	public int yToGridY(double y){
 		return (int)(((double)y)*((double)myStage.myGrid.getHeight())/((double)myStage.getHeight()));
 	}
+	
+	public boolean isOnSurface() {
+		double oldyvel = yvel;
+		yvel = 1;
+		boolean result = false;
+		if(checkAdjacencyY())
+			result = true;
+		yvel = oldyvel;
+		return result;
+	}
 	@Override
 	public void move(){
-		if(this instanceof Player){
+		boolean isInputUser = false;
+		if(myForces!=null){
+		for(ForceData f: myForces){
+			if(f instanceof PlayerInputData)
+				isInputUser = true;
+		}
+		}
+		if(isInputUser){
 		myTile.removeObject(this);
 		applyAdjustments();
 		hitbox.move(x, y);

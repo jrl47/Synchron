@@ -9,8 +9,8 @@ package Model;
 public class Camera {
 
 	private GameObject myObject;
-	public void addObject(Player p) {
-		myObject = p;
+	public void addObject(GameObject g) {
+		myObject = g;
 	}
 	public int getX(){
 		return (int)myObject.getX();
