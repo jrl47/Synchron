@@ -28,13 +28,15 @@ import View.SpriteSheet;
 public class Stage {
 	private int width;
 	private int height;
-	private static final int XTILES = 10;
-	private static final int YTILES = 10;
+	private static final int XTILES = 20;
+	private static final int YTILES = 20;
 	TileGrid myGrid;
 	private List<Camera> myCameras;
 	private List<GameObject> myObjects;
 	private List<Force> myForces;
 	private MovementListener listener;
+	
+	// eventually there will be a better way of making stages since this is obviously awful
 	public Stage(MovementListener lis){
 		listener = lis;
 		BufferedImage image = new BufferedImage(1,1,BufferedImage.TYPE_INT_RGB);
@@ -74,23 +76,26 @@ public class Stage {
 		Camera c2 = new Camera();
 		List<Camera> cameras = new ArrayList<Camera>();
 		cameras.add(c1); cameras.add(c2);
-		PhysicalObject player1 = new PhysicalObject(98*16, 170*16, redGuy, this, playerOneForces);
+		PhysicalObject player1 = new PhysicalObject(98*16, 170*16, redGuy, playerOneForces);
 		c1.addObject(player1);
-		PhysicalObject player2 = new PhysicalObject(99*16, 170*16, redGuy, this, playerTwoForces);
+		PhysicalObject player2 = new PhysicalObject(99*16, 170*16, redGuy, playerTwoForces);
 		c2.addObject(player2);
 		myCameras = cameras;
 		addObject(player1);
 		addObject(player2);
-		addObject(new GameObject(0, 0, back, this, 0, null));
+		addObject(new GameObject(0, 0, back, 0, null));
 		for(int i=0; i<map.getWidth(); i++){
 			for(int j=0; j<map.getHeight(); j++){
 				if(map.getPixel(i, j)==-16777216){
-					addObject(new PhysicalObject(16*i, 16*j, dirt, this, null));
+					addObject(new PhysicalObject(16*i, 16*j, dirt, null));
 				}
 			}
 		}
 	}
 	public void addObject(GameObject o){
+		if(o instanceof PhysicalObject){
+			myGrid.getTile(xToGridX(o.getX()),yToGridY(o.getY())).addObject((PhysicalObject)o);
+		}
 		myObjects.add(o);
 	}
 	public List<GameObject> getObjects(){
@@ -99,23 +104,126 @@ public class Stage {
 	public void step(){
 		for(GameObject o: myObjects){
 			applyForces(o);
-//			if(o instanceof InputUser){
-//				((InputUser) o).useInput();
-//			}
 			o.fixSpeed();
 			moveObject(o);
 		}
 	}
 	
 	public void moveObject(GameObject o){
-		o.move();
+		if(o instanceof PhysicalObject){
+			
+			boolean isInputUser = false;
+			if(o.getForces()!=null){
+			for(ForceData f: o.getForces()){
+				if(f instanceof PlayerInputData)
+					isInputUser = true;
+			}
+			}
+			if(isInputUser){
+				Tile myTile = myGrid.getTile(xToGridX(o.getX()),yToGridY(o.getY()));
+				myTile.removeObject((PhysicalObject)o);
+				applyAdjustments((PhysicalObject)o);
+				((PhysicalObject) o).adjustHitbox();
+				myTile = myGrid.getTile(xToGridX(o.getX()),yToGridY(o.getY()));
+				myTile.addObject((PhysicalObject)o);
+			}
+			else{
+				o.incrementX(o.getXVel());
+				o.incrementY(o.getYVel());
+			}
+		}
+		else{
+			o.incrementX(o.getXVel());
+			o.incrementY(o.getYVel());
+		}
+	}
+	/**
+	 * moves the object to where it needs to be considering nearby obstacles
+	 */
+	private void applyAdjustments(PhysicalObject o) {
+		
+		boolean done = false;
+		boolean xdone = false;
+		boolean ydone = false;
+		List<PhysicalObject> os = getCloseObjects(myGrid.getTile(xToGridX(o.getX()), yToGridY(o.getY())));
+		int xinc = 0;
+		int yinc = 0;
+		int xsign = (int) Math.signum(o.getXVel());
+		int ysign = (int) Math.signum(o.getYVel());
+		while(!done){
+			if(o.checkAdjacencyX(os) && !o.checkAdjacencyY(os)){
+				o.setXVel(0);
+				xdone = true;
+			}
+			if(o.checkAdjacencyY(os) && !o.checkAdjacencyX(os)){
+				o.setYVel(0);
+				ydone = true;
+			}
+			if(o.checkAdjacencyX(os) && o.checkAdjacencyY(os)){
+				o.setXVel(0);
+				o.setYVel(0);
+				xdone = true;
+				ydone = true;
+			}
+			if(o.checkAdjacencyBoth(os) && !o.checkAdjacencyX(os) && !o.checkAdjacencyY(os)){
+				o.setXVel(0);
+				xdone = true;
+			}
+			if(Math.abs(xinc) < Math.abs(o.getXVel()) && !xdone){
+				o.incrementX(xsign);
+				xinc++;
+			}
+			else{
+				xdone = true;
+			}
+			if(Math.abs(yinc) < Math.abs(o.getYVel()) && !ydone){
+				o.incrementY(ysign);
+				yinc++;
+			}
+			else{
+				ydone = true;
+			}
+			if(xdone && ydone){
+				done=true;
+			}
+		}
+	}
+	public List<PhysicalObject> getCloseObjects(Tile myTile){
+		List<PhysicalObject> closeObjects = new ArrayList<PhysicalObject>();
+		Tile t;
+		for(int i=-1; i<=1; i++){
+			for(int j=-1; j<=1; j++){
+				if(myTile.getX() + i >= 0 && myTile.getX() + i < myGrid.getWidth()
+						&& myTile.getY() + j >= 0 && myTile.getY() + j < myGrid.getHeight()){
+					t = myGrid.getTile(myTile.getX() + i, myTile.getY() + j);
+					closeObjects.addAll(t.getObjects());
+				}
+			}
+		}
+		closeObjects.remove(this);
+		return closeObjects;
 	}
 	public void applyForces(GameObject o){
 		for(Force f: myForces){
 			f.applyForce(o);
 		}
 	}
-	
+	/**
+	 * 
+	 * @return
+	 * Converts an x-location in pixels to an x-location in tiles
+	 */
+	public int xToGridX(double x){
+		return (int)(((double)x)*((double)myGrid.getWidth())/((double)width));
+	}
+	/**
+	 * 
+	 * @return
+	 * Converts an y-location in pixels to an y-location in tiles
+	 */
+	public int yToGridY(double y){
+		return (int)(((double)y)*((double)myGrid.getHeight())/((double)height));
+	}
 	
 	public int getWidth(){
 		return width;

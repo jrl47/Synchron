@@ -18,15 +18,12 @@ public class GameObject {
 	protected double xvel;
 	protected double yvel;
 	private Sprite mySprite;
-	private boolean exists;
 	protected List<ForceData> myForces;
-	protected Stage myStage;
-	public GameObject(double xx, double yy, Sprite s, Stage st, double zz, List<ForceData> forces){
+	public GameObject(double xx, double yy, Sprite s, double zz, List<ForceData> forces){
 		x = xx;
 		y = yy;
 		z = zz;
 		mySprite = s;
-		myStage = st;
 		myForces = forces;
 	}
 	public double getX(){
@@ -35,18 +32,20 @@ public class GameObject {
 	public double getY(){
 		return y;
 	}
+	public double getXVel(){
+		return xvel;
+	}
+	public double getYVel(){
+		return yvel;
+	}
 	public Sprite getSprite(){
 		return mySprite;
 	}
-	public boolean exists(){
-		return exists;
+	public void incrementX(double xinc){
+		x+= xinc;
 	}
-	public void destroy(){
-		exists = false;
-	}
-	public void move(){
-		x+=xvel;
-		y+=yvel;
+	public void incrementY(double yinc){
+		y+= yinc;
 	}
 	public void incrementXVel(double xinc){
 		xvel+= xinc;
@@ -79,4 +78,5 @@ public class GameObject {
 	public List<ForceData> getForces() {
 		return myForces;
 	}
+
 }

@@ -3,6 +3,7 @@ package Forces;
 import java.util.List;
 
 import Model.GameObject;
+import Model.Stage;
 
 public abstract class Force {
 	

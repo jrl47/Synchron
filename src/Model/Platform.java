@@ -4,8 +4,8 @@ import View.Sprite;
 
 public class Platform extends PhysicalObject{
 
-	public Platform(double xx, double yy, Sprite s, Stage st) {
-		super(xx, yy, s, st, null);
+	public Platform(double xx, double yy, Sprite s) {
+		super(xx, yy, s,  null);
 	}
 	@Override
 	protected boolean collides(PhysicalObject p){
