@@ -142,6 +142,7 @@ public class Stage {
 	 */
 	private void applyAdjustments(PhysicalObject o) {
 		
+		o.setOnSurface(false);
 		boolean done = false;
 		boolean xdone = false;
 		boolean ydone = false;
@@ -156,10 +157,14 @@ public class Stage {
 				xdone = true;
 			}
 			if(o.checkAdjacencyY(os) && !o.checkAdjacencyX(os)){
+				if(o.getYVel()>0)
+				o.setOnSurface(true);
 				o.setYVel(0);
 				ydone = true;
 			}
 			if(o.checkAdjacencyX(os) && o.checkAdjacencyY(os)){
+				if(o.getYVel()>0)
+				o.setOnSurface(true);
 				o.setXVel(0);
 				o.setYVel(0);
 				xdone = true;

@@ -18,16 +18,18 @@ import View.Sprite;
 public class PhysicalObject extends GameObject{
 
 	protected Hitbox hitbox;
+	private boolean onSurface;
 	public PhysicalObject(double xx, double yy, Sprite s, List<ForceData> forces) {
 		super(xx, yy, s, 1, forces);
 		List<Rectangle2D.Double> rects = new ArrayList<Rectangle2D.Double>();
 		rects.add(new Rectangle2D.Double((int)xx, (int)yy, s.XSIZE, s.YSIZE));
 		hitbox = new Hitbox(rects);
+		onSurface = false;
 	}
 	
 	
 	public boolean isOnSurface() {
-		return true;
+		return onSurface;
 //		double oldyvel = yvel;
 //		yvel = 1;
 //		boolean result = false;
@@ -36,7 +38,9 @@ public class PhysicalObject extends GameObject{
 //		yvel = oldyvel;
 //		return result;
 	}
-
+	public void setOnSurface(boolean s){
+		onSurface = s;
+	}
 
 	
 	/**
