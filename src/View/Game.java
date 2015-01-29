@@ -21,7 +21,7 @@ public class Game implements Runnable, InputUser{
 	
 	public static int width = 800;
 	public static int height = (width / 16) * 9;
-	public static double scale = 1.5;
+	public static double scale = 2;
 	
 	private Thread thread;
 	private Canvas canvas;

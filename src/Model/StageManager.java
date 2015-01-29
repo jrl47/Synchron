@@ -3,6 +3,8 @@ package Model;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +30,14 @@ public class StageManager {
 
 	public Stage buildInitialStage(MovementListener listener){
 		if(myStage==null){
-			myStage = new Stage(listener);
+			List<String> data = null;
+			try {
+				data = Files.readAllLines(Paths.get("resources/leveldata.txt"));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			myStage = new Stage(listener, new StageData(data));
 		}
 		return myStage;
 	}

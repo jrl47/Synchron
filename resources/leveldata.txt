@@ -1,0 +1,12 @@
+Level:
+LevelImage=/level.png
+Gravity=On
+PlayerInput=On
+BackgroundSpriteSheet=/amazingbackground.png
+SpriteSheet=/lightdeciduousspritesheet.png
+Block=Block
+
+Block:
+SpriteX=1
+SpriteY=1
+Physical=On

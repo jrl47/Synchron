@@ -28,20 +28,20 @@ import View.SpriteSheet;
 public class Stage {
 	private int width;
 	private int height;
-	private static final int XTILES = 20;
-	private static final int YTILES = 20;
+	private static final int XTILES = 10;
+	private static final int YTILES = 10;
 	TileGrid myGrid;
 	private List<Camera> myCameras;
 	private List<GameObject> myObjects;
 	private List<Force> myForces;
 	private MovementListener listener;
 	
-	// eventually there will be a better way of making stages since this is obviously awful
-	public Stage(MovementListener lis){
+	public Stage(MovementListener lis, StageData stageData){
 		listener = lis;
+		
 		BufferedImage image = new BufferedImage(1,1,BufferedImage.TYPE_INT_RGB);
 		try {
-			image = ImageIO.read(SpriteSheet.class.getResource("/level.png"));
+			image = ImageIO.read(Stage.class.getResource("/level.png"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -67,11 +67,10 @@ public class Stage {
 		playerTwoForces.add(new PlayerInputData(KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT, KeyEvent.VK_UP));
 		
 		SpriteSheet bg = new SpriteSheet("/amazingbackground.png", map.getWidth()*16, map.getHeight()*16);
-		SpriteSheet sheet = new SpriteSheet("/lightdeciduousspritesheet.png", 80, 160);
-		SpriteSheet red = new SpriteSheet("/redguy.png", 16, 16);
+		SpriteSheet sheet = new SpriteSheet("/lightdeciduousspritesheet.png", 80, 176);
 		Sprite back = new Sprite(map.getWidth()*16, map.getHeight()*16, 0, 0, bg);
 		Sprite dirt = new Sprite(16, 16, 1, 1, sheet);
-		Sprite redGuy = new Sprite(16, 16, 0, 0, red);
+		Sprite redGuy = new Sprite(16, 16, 0, 10, sheet);
 		Camera c1 = new Camera();
 		Camera c2 = new Camera();
 		List<Camera> cameras = new ArrayList<Camera>();
@@ -84,6 +83,7 @@ public class Stage {
 		addObject(player1);
 		addObject(player2);
 		addObject(new GameObject(0, 0, back, 0, null));
+		
 		for(int i=0; i<map.getWidth(); i++){
 			for(int j=0; j<map.getHeight(); j++){
 				if(map.getPixel(i, j)==-16777216){
